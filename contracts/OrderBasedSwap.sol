@@ -16,12 +16,17 @@ contract OrderBasedSwap {
     }
 
     mapping (uint256 => Order) public orders;
-    uint256 public orderCount;        // Auto-incremented order ID
+    // Auto-incremented order ID
+    uint256 public orderCount;        
 
-    // Event definitions
+    // Event to emit OrderCreated
     event OrderCreated(uint256 orderId, address seller, address tokenAddress, uint256 tokenAmount, address paymentTokenAddress, uint256 price);
+    // Event to emit OrderFilled
     event OrderFilled(uint256 orderId, address buyer);
+    // Event to emit OrderCancelled
     event OrderCancelled(uint256 orderId);
+
+
 
     // Create a new order to sell tokens
     function createOrder(
