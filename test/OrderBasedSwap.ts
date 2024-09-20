@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { loadFixture,  } from "@nomicfoundation/hardhat-toolbox/network-helpers";
+import { parseEther, parseUnits } from "ethers";
 // import { token } from "../typechain-types/@openzeppelin/contracts";
 // import "@openzeppelin/contracts/token/ERC20/IERC20.sol"
 // import { ERC20 } from "../typechain-types";
@@ -50,15 +51,22 @@ import { loadFixture,  } from "@nomicfoundation/hardhat-toolbox/network-helpers"
 
     describe("Deployment", function() {
         it ("check if addresses of tokens are correctly deployed", async function(){
-        const {orderBasedSwap, tobiloba, tobex1, address1} = await loadFixture(deployOrderBasedSwap);
+        const {orderBasedSwap, tobiloba, tobex1, address1, address2} = await loadFixture(deployOrderBasedSwap);
         expect(await orderBasedSwap.getAddress()).to.properAddress;
         expect(await orderBasedSwap.tobilobaToken()).to.equal(tobiloba);
         expect(await orderBasedSwap.tobex1Token()).to.equal(tobex1);
         console.log(await tobex1.balanceOf(address1));
-        //expect(IERC20(tobiloba).balanceOf(await orderBasedSwap.getAddress())).to.equal(ethers.parseEther("10000.0"));
-        //expect(IERC20(tobex1).balanceOf(orderBasedSwap.getAddress())).to.equal(ethers.parseEther("10000.0"));
+        console.log(await tobiloba.balanceOf(address2));
 
         })
+    })
+
+    describe ("createOrder", function() {
+      it("should revert with amount greater than zero", async function() {
+        const {orderBasedSwap, tobiloba, tobex1, address1, address2} = await loadFixture(deployOrderBasedSwap)
+        const tokenAmount = await parseUnits ("1000" 18); 
+        
+      } )
     })
 
   }) 
