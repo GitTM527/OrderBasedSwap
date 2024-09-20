@@ -2,10 +2,24 @@
 pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract OrderBasedSwap {
 
+        address public owner;
+        address public tobilobaToken;
+        address public tobex1Token;
+        uint256 public orderCount;        
+
+
+   
+   constructor (address _tobilobaToken, address _tobex1Token) {
+        owner  = msg.sender;
+        tobilobaToken = _tobilobaToken;
+        tobex1Token = _tobex1Token;
+    }
+   
+   
     struct Order {
         address seller;
         address tokenAddress;         // Token being sold
@@ -17,15 +31,13 @@ contract OrderBasedSwap {
 
     mapping (uint256 => Order) public orders;
     // Auto-incremented order ID
-    uint256 public orderCount;        
-
+   
     // Event to emit OrderCreated
     event OrderCreated(uint256 orderId, address seller, address tokenAddress, uint256 tokenAmount, address paymentTokenAddress, uint256 price);
     // Event to emit OrderFilled
     event OrderFilled(uint256 orderId, address buyer);
     // Event to emit OrderCancelled
     event OrderCancelled(uint256 orderId);
-
 
 
     // Create a new order to sell tokens
@@ -76,13 +88,13 @@ contract OrderBasedSwap {
         emit OrderFilled(_orderId, msg.sender);
     }
 
-    // Cancel an order and refund the tokens to the seller
+    // Cancel an order and refund the tokens to the owner
     function cancelOrder(uint256 _orderId) external {
         Order storage order = orders[_orderId];
-        require(msg.sender == order.seller, "Only the seller can cancel the order");
-        require(order.isActive, "Order is not active");
+        require(msg.sender == order.seller, "Only the owner can cancel the order");
+        require(!order.isActive, "Order is not active");
 
-        // Transfer the token back to the seller
+        // Transfer the token back to the owner
         IERC20(order.tokenAddress).transfer(order.seller, order.tokenAmount);
 
         // Mark the order as inactive

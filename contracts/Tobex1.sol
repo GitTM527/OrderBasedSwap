@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-contract TobilobaToken is ERC20("TobilobaToken", "TBIT") {
+contract Tobex1 is ERC20("Tobex1 Token", "TXT") {
     address public owner;
 
     constructor() {
